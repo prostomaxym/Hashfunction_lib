@@ -12,39 +12,41 @@ constexpr auto LEFTROTATE(T1 x, T2  c) { return (((x) << (c)) | ((x) >> (32 - (c
 template<typename T1, typename T2>
 constexpr auto RIGHTROTATE(T1 x, T2  c) { return (((x) >> (c)) | ((x) << (32 - (c)))); }
 
+std::string preprocessMsg(std::string message)
+{
+	uint64_t MessageSize = message.size();
+	uint64_t new_len;
+
+	//Endended message length calculation
+	for (new_len = MessageSize * 8; new_len % 512 != 448; new_len++);
+	{
+		new_len /= 8;
+	}
+
+	//append zeroes to end
+	message.resize(new_len, '\0');
+
+	//append '1' bit to end
+	message[MessageSize] = 0x80;
+
+	//append message size to end
+	std::string appendMsgSize;
+	for (int k = 0; k < 8; k++)
+	{
+		appendMsgSize += (uint8_t)((8 * MessageSize) >> (8 * k));
+	}
+
+	for (int i = 7; i >= 0; --i)
+	{
+		message += appendMsgSize[i];
+	}
+	return message;
+}
+
 std::string SHA1(std::string message)
 {
 	//Preprocessing
-	{
-		uint64_t MessageSize = message.size();
-		uint64_t new_len;
-
-		//Endended message length calculation
-		for (new_len = MessageSize * 8; new_len % 512 != 448; new_len++);
-		{
-			new_len /= 8;
-		}
-
-		//append zeroes to end
-		message.resize(new_len, '\0');
-
-		//append '1' bit to end
-		message[MessageSize] = 0x80;
-
-		//append message size to end
-		{
-			std::string temp;
-			for (int k = 0; k < 8; k++)
-			{
-				temp += (uint8_t)((8 * MessageSize) >> (8 * k));
-			}
-
-			for (int i = 7; i >= 0; --i)
-			{
-				message += temp[i];
-			}
-		}
-	}
+	message = preprocessMsg(message);
 
 	//h0-h4 var initialization
 	uint32_t h0 = 0x67452301;
@@ -138,36 +140,7 @@ std::string SHA1(std::string message)
 std::string MD5(std::string message)
 {
 	//Preprocessing
-	{
-		uint64_t MessageSize =message.size();
-		uint64_t new_len;
-
-		//Endended message length calculation
-		for (new_len = MessageSize * 8; new_len % 512 != 448; new_len++);
-		{
-			new_len /= 8;
-		}
-
-		//append zeroes to end
-		message.resize(new_len, '\0');
-
-		//append '1' bit to end
-		message[MessageSize] = 0x80;
-
-		//append message size to end
-		{
-			std::string temp;
-			for (int k = 0; k < 8; k++)
-			{
-				temp += (uint8_t)((8 * MessageSize) >> (8 * k));
-			}
-
-			for (int i = 7; i >= 0; --i)
-			{
-				message += temp[i];
-			}
-		}
-	}
+	message = preprocessMsg(message);
 
 	//h0-h3 var initialization
 	uint32_t h0 = 0x67452301;
@@ -272,35 +245,7 @@ std::string MD5(std::string message)
 std::string RIPEMD160(std::string message)
 {
 	//Preprocessing
-	{
-		uint64_t MessageSize = message.size();
-		uint64_t new_len;
-
-		//Endended message length calculation
-		for (new_len = MessageSize * 8; new_len % 512 != 448; new_len++);
-		{
-			new_len /= 8;
-		}
-
-		//append zeroes to end
-		message.resize(new_len, '\0');
-
-		//append '1' bit to end
-		message[MessageSize] = 0x80;
-
-		{
-			std::string temp;
-			for (int k = 0; k < 8; k++)
-			{
-				temp += (uint8_t)((8 * MessageSize) >> (8 * k));
-			}
-
-			for (int i = 7; i >= 0; --i)
-			{
-				message += temp[i];
-			}
-		}
-	}
+	message = preprocessMsg(message);
 
 
 	//h0-h4 var initialization
@@ -456,35 +401,7 @@ std::string RIPEMD160(std::string message)
 std::string SHA256(std::string message)
 {
 	//Preprocessing
-	{
-		uint64_t MessageSize = message.size();
-		uint64_t new_len;
-
-		//Endended message length calculation
-		for (new_len = MessageSize * 8; new_len % 512 != 448; new_len++);
-		{
-			new_len /= 8;
-		}
-
-		//append zeroes to end
-		message.resize(new_len, '\0');
-
-		//append '1' bit to end
-		message[MessageSize] = 0x80;
-
-		{
-			std::string temp;
-			for (int k = 0; k < 8; k++)
-			{
-				temp += (uint8_t)((8 * MessageSize) >> (8 * k));
-			}
-
-			for (int i = 7; i >= 0; --i)
-			{
-				message += temp[i];
-			}
-		}
-	}
+	message = preprocessMsg(message);
 
 	//h0-h7 var initialization
 	uint32_t h0 = 0x6A09E667;
@@ -590,36 +507,7 @@ std::string SHA256(std::string message)
 std::string SHA224(std::string message)
 {
 	//Preprocessing
-	{
-		uint64_t MessageSize = message.size();
-		uint64_t new_len;
-
-		//Endended message length calculation
-		for (new_len = MessageSize * 8; new_len % 512 != 448; new_len++);
-		{
-			new_len /= 8;
-		}
-
-		//append zeroes to end
-		message.resize(new_len, '\0');
-
-		//append '1' bit to end
-		message[MessageSize] = 0x80;
-
-		//append message size to end
-		{
-			std::string temp;
-			for (int k = 0; k < 8; k++)
-			{
-				temp += (uint8_t)((8 * MessageSize) >> (8 * k));
-			}
-
-			for (int i = 7; i >= 0; --i)
-			{
-				message += temp[i];
-			}
-		}
-	}
+	message = preprocessMsg(message);
 					
 	//h0-h7 var initialization
 	uint32_t h0 = 0xc1059ed8;
